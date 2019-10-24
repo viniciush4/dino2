@@ -30,9 +30,9 @@ class GameScene extends Phaser.Scene {
     this.load.image('background3', 'assets/background2/03.png')
     this.load.image('background4', 'assets/background2/04.png')
     this.load.image('background5', 'assets/background2/05.png')
-    this.load.image('platform', 'assets/background/platform.png')
+    this.load.image('platform', 'assets/sprites/chao.png')
     this.load.image('restart', 'assets/sprites/restart.png')
-    this.load.image('gameover', 'assets/sprites/gameover.png')
+    this.load.image('gameover', 'assets/sprites/gameover2.png')
     this.load.image('meat', 'assets/sprites/meat.png')
     this.load.spritesheet('doux', 'assets/sprites/doux.png', {frameWidth: 23.8, frameHeight: 17})
     this.load.spritesheet('bomb', 'assets/sprites/bombs.png', {frameWidth: 14.5, frameHeight: 12})
@@ -40,20 +40,21 @@ class GameScene extends Phaser.Scene {
     this.load.audio('death', 'assets/death.mp3')
     this.load.audio('pickup', 'assets/pickup.wav')
     this.load.spritesheet('dino', 'assets/sprites/dino.png', {frameWidth: 44, frameHeight: 46})
+    this.load.spritesheet('dinoAbaixado', 'assets/sprites/dino_abaixado.png', {frameWidth: 59, frameHeight: 30})
   }
 
   create() {
-    this.background1 = this.add.tileSprite(400, 300, 512, 256, 'background1')
-    this.background2 = this.add.tileSprite(400, 300, 512, 256, 'background2')
-    this.background3 = this.add.tileSprite(400, 300, 512, 256, 'background3')
-    this.background4 = this.add.tileSprite(400, 300, 512, 256, 'background4')
+    // this.background1 = this.add.tileSprite(400, 300, 512, 256, 'background1')
+    // this.background2 = this.add.tileSprite(400, 300, 512, 256, 'background2')
+    // this.background3 = this.add.tileSprite(400, 300, 512, 256, 'background3')
+    // this.background4 = this.add.tileSprite(400, 300, 512, 256, 'background4')
 
-    this.background1.setScale(1.7, 2.4)
-    this.background2.setScale(1.7, 2.4)
-    this.background3.setScale(1.7, 2.4)
-    this.background4.setScale(1.7, 2.4)
+    // this.background1.setScale(1.7, 2.4)
+    // this.background2.setScale(1.7, 2.4)
+    // this.background3.setScale(1.7, 2.4)
+    // this.background4.setScale(1.7, 2.4)
 
-    this.ground = this.add.tileSprite(400, 568, 800, 100, 'platform')
+    this.ground = this.add.tileSprite(400, 568, 800, 12, 'platform')
     this.physics.add.existing(this.ground)
     this.ground.body.immovable = true
     this.ground.body.moves = false
@@ -113,6 +114,13 @@ class GameScene extends Phaser.Scene {
     this.anims.create({
       key: 'run2',
       frames: this.anims.generateFrameNumbers('dino', { start: 2, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+    })
+
+    this.anims.create({
+      key: 'run3',
+      frames: this.anims.generateFrameNumbers('dinoAbaixado', { start: 0, end: 1 }),
       frameRate: 10,
       repeat: -1
     })
@@ -180,7 +188,7 @@ class GameScene extends Phaser.Scene {
       restart.on('pointerover', () => restart.setTint(0xcccccc))
       restart.on('pointerout', () => restart.setTint(0xffffff))
       this.gameover = this.add.image(400, 180, 'gameover')
-      this.gameover.setScale(1.2)
+      this.gameover.setScale(2)
       // let user_id = localStorage.getItem('user_id')
 
       // fetch(`https://cryptic-crag-84668.herokuapp.com/users` + `/${user_id}`)
@@ -214,6 +222,7 @@ class GameScene extends Phaser.Scene {
     // this.cameras.main.startFollow(this.player, true, 0.05, 0.05)
     this.cameras.main.startFollow(this.player2, true, 0.05, 0.05)
     this.cameras.main.setBounds(0, 0, 800, 600)
+    this.cameras.main.setBackgroundColor('#f7f7f7')
   }
 
   update() {
@@ -222,7 +231,7 @@ class GameScene extends Phaser.Scene {
       this.scoreText.setText('SCORE: ' + this.score)
       let cursors = this.input.keyboard.createCursorKeys()
       // this.player.anims.play('run', true)
-      this.player2.anims.play('run2', true)
+      // this.player2.anims.play('run3', true)
       if (cursors.right.isDown) {
         // this.player.setVelocityX(200)
         // this.player.flipX = false
@@ -237,6 +246,13 @@ class GameScene extends Phaser.Scene {
         // this.player.setVelocityX(0)
         this.player2.setVelocityX(0)
       }
+
+      if (cursors.down.isDown) {
+        this.player2.anims.play('run3' ,true)
+      } else {
+        this.player2.anims.play('run2', true)
+      }
+
       // if (cursors.up.isDown && this.player.body.touching.down) {
       //   this.player.setVelocityY(-600);
       // }
@@ -244,10 +260,10 @@ class GameScene extends Phaser.Scene {
         this.player2.setVelocityY(-600);
     }
 
-      this.background1.tilePositionX += 1
-      this.background2.tilePositionX += 3
-      this.background3.tilePositionX += 5
-      this.background4.tilePositionX += 7
+      // this.background1.tilePositionX += 1
+      // this.background2.tilePositionX += 3
+      // this.background3.tilePositionX += 5
+      // this.background4.tilePositionX += 7
       // this.background5.tilePositionX += 10
       this.ground.tilePositionX += 10
   }
