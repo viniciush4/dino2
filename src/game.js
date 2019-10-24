@@ -9,14 +9,17 @@ class GameScene extends Phaser.Scene {
     this.isGameOver = false
     this.meats
     this.bombs
+    this.cactos
     this.characterScale = 5
     this.meatScale = 4
     this.bombScale = 4
+    this.cactoScale = 4
     this.score = 0
     this.scoreText
     this.gameOverText
     this.timedEvent
     this.timedEvent1
+    this.timedEvent2
   }
 
   preload() {
@@ -34,13 +37,20 @@ class GameScene extends Phaser.Scene {
     this.load.image('restart', 'assets/sprites/restart.png')
     this.load.image('gameover', 'assets/sprites/gameover2.png')
     this.load.image('meat', 'assets/sprites/meat.png')
+    this.load.image('cacto1', 'assets/sprites/cactos/1.png')
+    this.load.image('cacto2', 'assets/sprites/cactos/2.png')
+    this.load.image('cacto3', 'assets/sprites/cactos/3.png')
+    this.load.image('cacto4', 'assets/sprites/cactos/4.png')
+    this.load.image('cacto5', 'assets/sprites/cactos/5.png')
+    this.load.image('cacto6', 'assets/sprites/cactos/6.png')
+    this.load.image('cacto7', 'assets/sprites/cactos/7.png')
     this.load.spritesheet('doux', 'assets/sprites/doux.png', {frameWidth: 23.8, frameHeight: 17})
     this.load.spritesheet('bomb', 'assets/sprites/bombs.png', {frameWidth: 14.5, frameHeight: 12})
+    this.load.spritesheet('dino', 'assets/sprites/dino.png', {frameWidth: 44, frameHeight: 46})
+    this.load.spritesheet('dinoAbaixado', 'assets/sprites/dino_abaixado.png', {frameWidth: 59, frameHeight: 30})
     this.load.audio('music', 'assets/music.mp3')
     this.load.audio('death', 'assets/death.mp3')
     this.load.audio('pickup', 'assets/pickup.wav')
-    this.load.spritesheet('dino', 'assets/sprites/dino.png', {frameWidth: 44, frameHeight: 46})
-    this.load.spritesheet('dinoAbaixado', 'assets/sprites/dino_abaixado.png', {frameWidth: 59, frameHeight: 30})
   }
 
   create() {
@@ -54,6 +64,7 @@ class GameScene extends Phaser.Scene {
     // this.background3.setScale(1.7, 2.4)
     // this.background4.setScale(1.7, 2.4)
 
+    // Cria o chão
     this.ground = this.add.tileSprite(400, 568, 800, 12, 'platform')
     this.physics.add.existing(this.ground)
     this.ground.body.immovable = true
@@ -67,20 +78,29 @@ class GameScene extends Phaser.Scene {
     // this.player.setScale(this.characterScale)
     // this.player.setSize(13, 17, 0, 0)
 
+    // Cria o jogador
     this.player2 = this.physics.add.sprite(200, 400, 'dino')
     this.player2.getBounds()
-
     this.player2.setBounce(0.2)
     this.player2.setCollideWorldBounds(true)
     this.player2.setScale(2)
     this.player2.setSize(25, 40, 0, 0)
 
+    // Cria carnes
     this.meats = this.physics.add.group()
+
+    // Cria bombas
     this.bombs = this.physics.add.group()
 
-    this.timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true})
-    this.timedEvent1 = this.time.addEvent({ delay: 3000, callback: onEvent1, callbackScope: this, loop: true})
+    // Cria cactos
+    this.cactos = this.physics.add.group()
 
+    // Eventos de criar carne, bombas e cactos
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true})
+    this.timedEvent1 = this.time.addEvent({ delay: 10000, callback: onEvent1, callbackScope: this, loop: true})
+    this.timedEvent2 = this.time.addEvent({ delay: 3000, callback: onEvent2, callbackScope: this, loop: true})
+
+    // Música
     let music = this.sound.add('music')
     music.setLoop(true)
     music.play()
@@ -102,6 +122,15 @@ class GameScene extends Phaser.Scene {
       bomb.anims.play('boom', true)
       bomb.setBounceY(1.2)
       this.bombs.setVelocityX(Phaser.Math.Between(-1000, -300))
+    }
+
+    function onEvent2() {
+      this.timedEvent2.reset({ delay: Phaser.Math.Between(3000 ,5000), callback: onEvent2, callbackScope: this, loop: true})
+      let cacto = this.cactos.create(800, 480, 'cacto1')
+      cacto.setScale(this.cactoScale)
+      // cacto.setCircle(5)
+      // cacto.setBounceY(1.2)
+      this.cactos.setVelocityX(-500)
     }
 
     // this.anims.create({
@@ -209,12 +238,13 @@ class GameScene extends Phaser.Scene {
       //   })
     }
 
-    this.scoreText = this.add.text(16, 16, 'SCORE: 0', { fontSize: '32px', fill: '#FFFFFF' })
+    this.scoreText = this.add.text(16, 16, 'SCORE: 0', { fontFamily: 'arcadeclassic', fontSize: '32px', fill: '#545454' })
 
     // this.physics.add.collider(this.player, this.ground)
     this.physics.add.collider(this.player2, this.ground)
     this.physics.add.collider(this.meats, this.ground)
     this.physics.add.collider(this.bombs, this.ground)
+    this.physics.add.collider(this.cactos, this.ground)
     // this.physics.add.overlap(this.player, this.meats, collectMeat, null, this)
     this.physics.add.overlap(this.player2, this.meats, collectMeat, null, this)
     // this.physics.add.collider(this.player, this.bombs, hitBomb, null, this)
