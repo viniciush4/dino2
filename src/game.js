@@ -48,6 +48,7 @@ class GameScene extends Phaser.Scene {
     this.load.spritesheet('bomb', 'assets/sprites/bombs.png', {frameWidth: 14.5, frameHeight: 12})
     this.load.spritesheet('dino', 'assets/sprites/dino.png', {frameWidth: 44, frameHeight: 46})
     this.load.spritesheet('dinoAbaixado', 'assets/sprites/dino_abaixado.png', {frameWidth: 59, frameHeight: 30})
+    this.load.spritesheet('dinoCompleto', 'assets/sprites/dinoCompleto.png', {frameWidth: 50, frameHeight: 46})
     this.load.audio('music', 'assets/music.mp3')
     this.load.audio('death', 'assets/death.mp3')
     this.load.audio('pickup', 'assets/pickup.wav')
@@ -79,7 +80,7 @@ class GameScene extends Phaser.Scene {
     // this.player.setSize(13, 17, 0, 0)
 
     // Cria o jogador
-    this.player2 = this.physics.add.sprite(200, 400, 'dino')
+    this.player2 = this.physics.add.sprite(200, 400, 'dinoCompleto')
     this.player2.getBounds()
     this.player2.setBounce(0.2)
     this.player2.setCollideWorldBounds(true)
@@ -142,14 +143,14 @@ class GameScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'run2',
-      frames: this.anims.generateFrameNumbers('dino', { start: 2, end: 3 }),
+      frames: this.anims.generateFrameNumbers('dinoCompleto', { start: 2, end: 3 }),
       frameRate: 10,
       repeat: -1
     })
 
     this.anims.create({
       key: 'run3',
-      frames: this.anims.generateFrameNumbers('dinoAbaixado', { start: 0, end: 1 }),
+      frames: this.anims.generateFrameNumbers('dinoCompleto', { start: 5, end: 6 }),
       frameRate: 10,
       repeat: -1
     })
@@ -163,7 +164,7 @@ class GameScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'hurt2',
-      frames: this.anims.generateFrameNumbers('dino', { start: 4, end: 4 }),
+      frames: this.anims.generateFrameNumbers('dinoCompleto', { start: 4, end: 4 }),
       frameRate: 10,
       repeat: -1
     })
